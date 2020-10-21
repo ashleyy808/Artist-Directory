@@ -4,8 +4,8 @@
 A simple music app that displays a brief background of an artist of your choice in a web browser.
 
 # Wireframe
-https://wireframe.cc/vX4iac __
-http://127.0.0.1:5501/?  __
+https://wireframe.cc/vX4iac 
+http://127.0.0.1:5501/?  
 
 ## Technologies
 -HTML5

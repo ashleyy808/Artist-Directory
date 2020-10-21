@@ -85,12 +85,11 @@ input[type=text]:focus {
     text-transform: uppercase;
 }
 
+
 main > p  {
     font-family: 'Piazzolla', serif;
 }
 
-
- 
 
 .flex-ctr {
     display: flex;
@@ -99,7 +98,6 @@ main > p  {
     font-family: 'Piazzolla', serif;
     text-align:justify;
 }
-
 
 
 
@@ -134,7 +132,7 @@ p {
     content: '';
     position: absolute;
     width: 250px;
-    height: 250px;
+    height: 255px;
     background: #FDA8CF;
     border-radius: 25px;
     z-index: -1;
@@ -351,11 +349,6 @@ p {
   }
 
 
-  
-
-.container:hover #bio{
-  transform: scale(1);
-}
 
 
 
