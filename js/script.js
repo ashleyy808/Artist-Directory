@@ -1,9 +1,9 @@
 // Constants and Variables
 
-let musicData, userInput, artistData, albumData, artistDetail;
+let musicData, userInput, artistData, albumData;
 
-const API_KEY = '';
-const BASE_URL = 'http://ws.audioscrobbler.com/2.0';
+//const API_KEY = '9c61803d5589d2c9d7afe6164ad96ea3';
+const BASE_URL = 'https://proxify-artist-director.herokuapp.com';
 //const BASE_URL2 = 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=Cher&api_key=YOUR_API_KEY&format=json';
 //const BASE_URL3 = 'http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=cher&api_key=YOUR_API_KEY&format=json';
 // Cached Elements References 
@@ -13,25 +13,19 @@ const $form = $('form');
 const $input = $('input[type="text"]');
 const $artist = $('#artist');
 const $album = $('#album');
-//const $similarartists = $('#similaratists');  
-const $cardsEl = $('#cards');
-const $modal = $('#modal');
 const $bio = $('#bio');
-
-//const $output =$('#output');
 
 
 // Event Listeners 
 
 $form.on('submit', handleGetArtist);
-//$form.on('submit', handleGetData);
-$cardsEl.on('click', 'article', handleClick);    
+//$form.on('submit', handleGetData); 
 $form.on('submit', handleGetAlbum); 
 
 // Functions 
 
 
-// 1) Function to obtain Artist's Info
+// 1) Function to obtain Artist's Information
 
 
 function setQuery(event) {
@@ -51,10 +45,10 @@ function handleGetArtist(event) {
     userInput = $input.val();
     if(!userInput) return;
 
-    $.ajax( BASE_URL + '?method=artist.getinfo&artist=' + userInput + '&api_key=' + API_KEY + '&format=json')
+    $.ajax( BASE_URL + '/artist?artist=' + userInput)
     .then(function(data) {
         artistData = data.artist;
-       // console.log(artistData);
+
         artistName = artistData ['name'];
         artistBio = artistData ['bio']['summary'];
         console.log(artistName);
@@ -71,63 +65,43 @@ function renderArtist(){
    $bio.text(`Bio: ${artistData.bio.summary}`);  
 }
 
+// 2) Function for obtaining album information 
 
-
-// 2) Function to obtain 'Bio' Info through modal pop-up
-
-init();
-function init() {
-    getData();
-}
-function getData(detailURL) {
-    const url = detailURL ? detailURL : BASE_URL;
-    $.ajax(url)
-    .then(function(data) {
-        if(detailURL) {
-            artistDetail = data;
-            renderArtist(true);
-        } else {
-            artistData = data;
-            renderArtist();
-        }
-    }, function(error) {
-        console.log('Error: ', error);
-    
-    });
-}
-function handleClick() {
-    const url = this.dataset.url;
-    getData(url);
-}
-function displayResults (bio) {
-    artistBio = artistData ['bio']['summary'];
-    console.log(artistBio, 'summary');
-    bio = document.querySelector('#cards .flex-ctr');
-    $bio.text(`Bio: ${artistData.bio.summary}`);
-}
-/*
-function generateUI() {
-    return artistData.results.map(function(bio) {
-        return`
-        <article data-url="${artist.url}" class="card flex-ctr outline">
-            <h3>${artist.bio}<h3>
-        </article>`;
-    });
-}
-*/
-
-function render(isDetail) {
-    if(isDetail) {
-        $sprite.attr({
-            src: artistDetail.sprites.front_default,
-            alt: artistData.name
-        });
-        $bio.text(`Bio: ${artistData.bio.summary}`);
-        $modal.modal();
-    } else {
-        $cardsEl.html(generateUI())
+function setQuery(event) {
+    if(event.keyCode === 13) {
+        handleGetAlbum(value);
     }
 }
+
+function handleGetAlbum(event) {
+    event.preventDefault();
+    userInput = $input.val();
+    if(!userInput) return;
+
+    $.ajax(  BASE_URL + '/album?artist=' + userInput)
+    .then(function(data) {
+        
+        albumData = data;
+     //   albumData = data.topalbums.album.name.slice(0,10);
+
+     renderTopAlbums();
+
+    }, function(error) {
+        console.log('Error: ', error);
+    });
+}
+
+function renderTopAlbums(){
+    const html = albumData.topalbums.album.slice(0,5).map(function(album){
+        return `
+             -${album.name}<br>
+        ` 
+    })
+    console.log(html);
+    $album.html(html);
+}
+
+
 
 
 /*
@@ -167,95 +141,3 @@ function render() {
 }
 
 */
-
-function setQuery(event) {
-    if(event.keyCode === 13) {
-        handleGetAlbum(value);
-    }
-}
-
-function handleGetAlbum(event) {
-    event.preventDefault();
-    userInput = $input.val();
-    if(!userInput) return;
-
-    $.ajax( BASE_URL + '?method=artist.gettopalbums&artist=' + userInput + '&api_key=' + API_KEY + '&format=json')
-    .then(function(data) {
-        
-        albumData = data;
-        
-       // console.log(albumTopAlbum);
-        
-
-       // console.log(albumData);
-    //  renderTopAlbums();
-      
-      // renderTopAlbums(albumData);
-
-    }, function(error) {
-        console.log('Error: ', error);
-    });
-}
-
-//function renderTopAlbums(){
-   // console.log(albumData);
-   // $output.text(albumData.topalbums.album);
-   // $album.html(albumData.topalbums.album.name);
-    //console.log(albumData);
-    // $album.html(`Albums: ${albumData.map.topalbums.album.name.artist}`);
-//}
-
-
-
-
-
-
-
-
-function render() {
-     musicDetailUI = albumData.map(function(topalbums) {
-        return `
-        <article>
-        <h3>${topalbums.album.name}</h3>
-        </article>
-        `;
-    });
-    $main.html(musicDetailUI);
-}
-
-
-/*
-
-function render() {
-    const musicDetailUI = musicData.map(function(similarartist) {
-        return `
-        <p>
-        <h3>${similarartist.name}</h3>
-        </p>
-        `;
-    });
-    $main.html(musicDetailUI);
-}
-*/
-
-
-
-
-jQuery(document).ready(function($) {
-
-    //Count nr. of square classes
-    var countSquare = $('.square').length;
-  
-    //For each Square found add BG image
-    for (i = 0; i < countSquare; i++) {
-      var firstImage = $('.square').eq([i]);
-      var secondImage = $('.square2').eq([i]);
-  
-      var getImage = firstImage.attr('data-image');
-      var getImage2 = secondImage.attr('data-image');
-  
-      firstImage.css('background-image', 'url(' + getImage + ')');
-      secondImage.css('background-image', 'url(' + getImage2 + ')');
-    }
-  
-  });
