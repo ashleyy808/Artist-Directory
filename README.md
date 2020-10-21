@@ -3,6 +3,8 @@
 # Description
 A simple music app that displays a brief background of an artist of your choice in a web browser.
 
+<img width="400" alt="Screen Shot 2020-10-21 at 15 12 51" src="https://user-images.githubusercontent.com/70113941/96777706-a6e70400-13b8-11eb-8d0d-1437410c4bef.png">
+
 
 # Wireframe
 https://wireframe.cc/vX4iac 
